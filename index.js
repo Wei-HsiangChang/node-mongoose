@@ -13,12 +13,28 @@ connect.then((db) => {
         description: 'test'
     })
     .then((dish) => {
-        console.log(dish);
+        console.log(dish.toObject());
 
-        return Dishes.find({}).exec();
+        return Dishes.findByIdAndUpdate(dish._id, {
+            $set: { description: 'Updated test' }
+        },{
+            new: true
+        }).exec();
     })
-    .then((dishes) => {
-        console.log(dishes);
+    .then((dish) => {
+        console.log(dish.toObject());
+
+        dish.comments.push({
+            rating: 5,
+            comment: 'I\'m getting a sinking feeling!',
+            author: 'Leonardo di Carpaccio'
+        });
+
+        return dish.save();
+
+    })
+    .then((dish) => {
+        console.log(dish.toObject());
 
         return Dishes.remove({});
     })
